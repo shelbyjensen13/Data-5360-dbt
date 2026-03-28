@@ -1,0 +1,13 @@
+version: 2
+
+models:
+  - name: fact_esales
+    description: "Sales transactions joined to dimensions."
+  - name: fact_email_event
+    description: "Marketing email events joined to dimensions."
+  - name: dim_ecustomer
+  - name: dim_product
+  - name: dim_eemail
+  - name: dim_edate
+  - name: dim_etime
+  - name: dim_campaign
