@@ -17,8 +17,21 @@ models:
     description: "Oliver Store Dimension"
   - name: fact_sales
     description: "Oliver Sales Fact"
+<<<<<<< HEAD
     columns:
       - name: product_key
         description: "A foreign key to the product dimension"
         tests: 
           - not_null
+=======
+  - name: stg_employee_certifications
+    description: |
+      Staging model for employee certifications. 
+      Each record represents a certification an employee has.
+  - name: fact_certification
+    description: |
+      Employee certification fact. 
+      The grain of this table is employee + date + certification
+      Each record represents a certification an employee has, it's name, cost, 
+      and the date it was awarded. 
+>>>>>>> d79fb42f0b7d688ea47272d3aa38e9574cb53125
