@@ -1,0 +1,25 @@
+version: 2
+
+sources:
+  - name: ecoessentials_landing
+    database: shelbyjensen
+    schema: DELIVERABLE_TWO_ECOESSENTIALS_TRANSACTIONAL_DB
+    tables:
+      - name: PRODUCT
+      - name: ORDER
+        quoting:
+          identifier: true        
+      - name: ORDER_LINE
+      - name: CUSTOMER
+      - name: PROMOTIONAL_CAMPAIGN
+
+
+  - name: salesforce_landing
+    database: shelbyjensen
+    schema: DT_SALESFORCE_EMAILS
+    tables:
+      - name: MARKETINGEMAILS 
+      - name: date
+      - name: email
+      - name: time
+      - name: event_type
