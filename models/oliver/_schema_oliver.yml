@@ -9,7 +9,16 @@ models:
     description: "Oliver Date Dimension"
   - name: oliver_dim_product
     description: "Oliver Product Dimension"
+    columns:
+      - name: product_key
+        tests:
+          - unique
   - name: oliver_dim_store
     description: "Oliver Store Dimension"
   - name: fact_sales
     description: "Oliver Sales Fact"
+    columns:
+      - name: product_key
+        description: "A foreign key to the product dimension"
+        tests: 
+          - not_null
