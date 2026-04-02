@@ -5,14 +5,29 @@ models:
     description: "Oliver Customer Dimension"
   - name: oliver_dim_employee
     description: "Oliver Employee Dimension"
+    columns: 
+      - name: position
+        tests: 
+          - accepted_values:
+              arguments:
+                values: [ "Customer Service", "Sales Associate", "Stock Clerk", "Cashier", "Manager"]
   - name: oliver_dim_date
     description: "Oliver Date Dimension"
   - name: oliver_dim_product
     description: "Oliver Product Dimension"
+    columns:
+      - name: product_key
+        tests:
+          - unique
   - name: oliver_dim_store
     description: "Oliver Store Dimension"
   - name: fact_sales
     description: "Oliver Sales Fact"
+    columns:
+      - name: product_key
+        description: "A foreign key to the product dimension"
+        tests: 
+          - not_null
   - name: stg_employee_certifications
     description: |
       Staging model for employee certifications. 
@@ -23,3 +38,10 @@ models:
       The grain of this table is employee + date + certification
       Each record represents a certification an employee has, it's name, cost, 
       and the date it was awarded. 
+    columns:
+      - name: date_key
+        data_tests:
+          - relationships:
+              arguments: 
+                to: ref('oliver_dim_date') # the model you want to compare to
+                field: date_key # the field on the model you want to compare to
