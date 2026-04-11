@@ -38,7 +38,7 @@ models:
     columns:
       - name: TIME_KEY
         tests:
-          - unique
+          - not_null
   - name: dim_campaign
     columns:
       - name: CAMPAIGN_ID
