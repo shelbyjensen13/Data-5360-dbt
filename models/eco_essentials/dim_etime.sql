@@ -5,9 +5,9 @@
 ) }}
 
 SELECT
-    EMAILEVENTID as Time_Key, -- Or whichever ID you are using for the Time PK
-    -- Snowflake's HOUR/MINUTE functions to break down the timestamp
-    HOUR(SENDTIMESTAMP) as Hour,
-    MINUTE(SENDTIMESTAMP) as Minute,
-    SECOND(SENDTIMESTAMP) as Second
+    {{ dbt_utils.generate_surrogate_key(["TO_CHAR(SENDTIMESTAMP, 'HH24:MI:SS')"]) }} as TIME_KEY,
+    TO_CHAR(SENDTIMESTAMP, 'HH24:MI:SS') as TIME_OF_DAY,
+    HOUR(EVENTTIMESTAMP) as HOUR,
+    MINUTE(EVENTTIMESTAMP) as MINUTE,
+    SECOND(EVENTTIMESTAMP) as SECOND
 FROM {{ source('salesforce_landing', 'MARKETINGEMAILS') }}

@@ -3,14 +3,14 @@ version: 2
 sources:
   - name: ecoessentials_landing
     database: shelbyjensen
-    schema: DELIVERABLE_TWO_ECOESSENTIALS_TRANSACTIONAL_DB
+    schema: ECO_1_ECOESSENTIALS_TRANSACTIONAL_DB
     tables:
-      - name: PRODUCT
+      - name: CUSTOMER
       - name: ORDER
         quoting:
           identifier: true        
       - name: ORDER_LINE
-      - name: CUSTOMER
+      - name: PRODUCT
       - name: PROMOTIONAL_CAMPAIGN
 
 
@@ -19,7 +19,7 @@ sources:
     schema: DT_SALESFORCE_EMAILS
     tables:
       - name: MARKETINGEMAILS 
-      - name: date
-      - name: email
-      - name: time
-      - name: event_type
+      - name: DATE
+      - name: EMAIL
+      - name: TIME
+      - name: EVENT_TYPE
