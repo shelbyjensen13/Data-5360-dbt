@@ -5,7 +5,7 @@
 }}
 
 SELECT
-CAMPAIGN_ID as CAMPAIGN_KEY,
+{{ dbt_utils.generate_surrogate_key(['CAMPAIGN_ID']) }} as CAMPAIGN_KEY,
 CAMPAIGN_ID,
 CAMPAIGN_NAME,
 CAMPAIGN_DISCOUNT

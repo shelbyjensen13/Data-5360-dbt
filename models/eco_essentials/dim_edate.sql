@@ -6,14 +6,10 @@
 
 SELECT
     DISTINCT
-    -- Create the Date_Key (Format: 20260327)
-    TO_CHAR(EVENTTIMESTAMP, 'YYYYMMDD') as Date_Key,
-    -- Create Full_Date
-    CAST(EVENTTIMESTAMP AS DATE) as Full_Date,
-    -- Get Day of Week (1-7)
-    DAYOFWEEK(EVENTTIMESTAMP) as DayOfWeek,
-    -- Get Month (1-12)
-    MONTH(EVENTTIMESTAMP) as Month,
-    -- Get Year
-    YEAR(EVENTTIMESTAMP) as Year
+    {{ dbt_utils.generate_surrogate_key(["TO_CHAR(EVENTTIMESTAMP, 'YYYYMMDD')"]) }} as DATE_KEY,
+    TO_CHAR(EVENTTIMESTAMP, 'YYYYMMDD') as DATE_ID,
+    CAST(EVENTTIMESTAMP AS DATE) as FULL_DATE,
+    DAYOFWEEK(EVENTTIMESTAMP) as DAY_OF_WEEK,
+    MONTH(EVENTTIMESTAMP) as MONTH,
+    YEAR(EVENTTIMESTAMP) as YEAR
 FROM {{ source('salesforce_landing', 'MARKETINGEMAILS') }}

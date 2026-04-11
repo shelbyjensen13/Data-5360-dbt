@@ -4,7 +4,8 @@
 ) }}
 
 SELECT
-    EMAILID as Email_Key, -- Renaming to match your PK in the diagram
+    {{ dbt_utils.generate_surrogate_key(['EMAILID']) }} as EMAIL_KEY, 
     EMAILID,
     EMAILNAME
 FROM {{ source('salesforce_landing', 'MARKETINGEMAILS') }}
+GROUP BY 1, 2, 3
