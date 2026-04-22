@@ -4,12 +4,18 @@
     )
 }}
 
+WITH date_try AS (
+    {{ dbt_utils.date_spine(
+        datepart="day",
+        start_date="cast('2020-01-01' as date)",
+        end_date="cast('2030-12-31' as date)"
+    ) }}
+)
+
 SELECT
-    DISTINCT
-    {{ dbt_utils.generate_surrogate_key(["TO_CHAR(EVENTTIMESTAMP, 'YYYYMMDD')"]) }} as DATE_KEY,
-    TO_CHAR(EVENTTIMESTAMP, 'YYYYMMDD') as DATE_ID,
-    CAST(EVENTTIMESTAMP AS DATE) as FULL_DATE,
-    DAYOFWEEK(EVENTTIMESTAMP) as DAY_OF_WEEK,
-    MONTH(EVENTTIMESTAMP) as MONTH,
-    YEAR(EVENTTIMESTAMP) as YEAR
-FROM {{ source('salesforce_landing', 'MARKETINGEMAILS') }}
+    {{ dbt_utils.generate_surrogate_key(['date_day']) }} AS DATE_KEY,
+    date_day AS DATE,
+    EXTRACT(day FROM date_day) AS DAY,
+    EXTRACT(month FROM date_day) AS MONTH,
+    EXTRACT(year FROM date_day) AS YEAR
+FROM date_try
