@@ -6,7 +6,7 @@
 
 WITH events AS (
     SELECT DISTINCT EVENTTYPE
-    FROM {{ source('dt_salesforce_emails', 'marketingemails') }}
+    FROM {{ source('salesforce_landing', 'marketingemails') }}
 )
 
 SELECT

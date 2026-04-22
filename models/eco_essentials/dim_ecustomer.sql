@@ -15,7 +15,7 @@ marketing_emails AS (
         subscriberid,
         subscriberlastname,
         subscriberemail
-    FROM {{ source('DT_salesforce_emails', 'marketingemails') }}
+    FROM {{ source('salesforce_landing', 'marketingemails') }}
 )
 
 SELECT
