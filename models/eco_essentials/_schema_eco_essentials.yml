@@ -1,6 +1,21 @@
 version: 2
 
 models:
+  - name: dim_event_type
+    description: Event dimension table for marketing email events
+    columns:
+      - name: EVENT_KEY
+        description: Surrogate key for events
+        tests:
+          - unique
+          - not_null
+      - name: event_type
+        description: Type of email event
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['click', 'open', 'send']
   - name: fact_esales
     description: "Sales transactions joined to dimensions."
     columns:
