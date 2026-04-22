@@ -5,7 +5,7 @@
 }}
 
 WITH customers AS (
-    SELECT * FROM {{ source('ecoessentials_landing', 'customer') }}
+    SELECT * FROM {{ source('ecoessentials_landing', 'CUSTOMER') }}
 ),
 
 marketing_emails AS (
@@ -15,7 +15,7 @@ marketing_emails AS (
         subscriberid,
         subscriberlastname,
         subscriberemail
-    FROM {{ source('salesforce_landing', 'marketingemails') }}
+    FROM {{ source('salesforce_landing', 'MARKETINGEMAILS') }}
 )
 
 SELECT
@@ -24,8 +24,8 @@ SELECT
         'COALESCE(c.customer_first_name, m.subscriberfirstname)',
         'COALESCE(c.customer_last_name, m.subscriberlastname)'
     ]) }} AS CUSTOMER_KEY,
-    COALESCE(c.customer_id, TRY_CAST(m.customerid AS NUMBER)) AS CUSTOMER_ID,
-    COALESCE(c.customer_first_name, m.subscriberfirstname) AS CUSTOMER_FIRST_NAME
+    COALESCE(c.customer_id, TRY_CAST(m.customer_id AS NUMBER)) AS CUSTOMER_ID,
+    COALESCE(c.customer_first_name, m.subscriberfirstname) AS CUSTOMER_FIRST_NAME,
     COALESCE(c.customer_last_name, m.subscriberlastname) AS CUSTOMER_LAST_NAME,
     COALESCE(c.customer_email, m.subscriberemail) AS CUSTOMER_EMAIL,
     c.CUSTOMER_ADDRESS,
@@ -39,4 +39,4 @@ SELECT
     END AS IS_SUBSCRIBER
 FROM customers c
 FULL OUTER JOIN marketing_emails m
-    ON c.customer_id = m.customerid
+    ON c.customer_id = m.customer_id
