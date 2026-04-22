@@ -8,7 +8,7 @@ sources:
       - name: CUSTOMER
       - name: ORDER
         quoting:
-          identifier: true        
+          identifier: '"ORDER"'       
       - name: ORDER_LINE
       - name: PRODUCT
       - name: PROMOTIONAL_CAMPAIGN

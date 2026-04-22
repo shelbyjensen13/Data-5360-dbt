@@ -1,78 +1,42 @@
 {{ config(
     materialized = 'table',
     schema = 'ECOESSENTIALS_DW_SOURCE'
-) }}
-
-WITH eco_customers AS (
-    SELECT
-        CUSTOMER_ID,
-        CUSTOMER_FIRST_NAME,
-        CUSTOMER_LAST_NAME,
-        CUSTOMER_PHONE,
-        CUSTOMER_ADDRESS,
-        CUSTOMER_CITY,
-        CUSTOMER_STATE,
-        CUSTOMER_ZIP,
-        CUSTOMER_COUNTRY,
-        CUSTOMER_EMAIL,
-        'ECO' AS SOURCE_SYSTEM,
-        'CUSTOMER' AS CUSTOMER_TYPE
-    FROM {{ source("ecoessentials_landing", "CUSTOMER") }}
-),
-
-sf_subscribers AS (
-    SELECT DISTINCT
-        SUBSCRIBERID AS CUSTOMER_ID,
-        SUBSCRIBERFIRSTNAME AS CUSTOMER_FIRST_NAME,
-        SUBSCRIBERLASTNAME AS CUSTOMER_LAST_NAME,
-        NULL AS CUSTOMER_PHONE,
-        NULL AS CUSTOMER_ADDRESS,
-        NULL AS CUSTOMER_CITY,
-        NULL AS CUSTOMER_STATE,
-        NULL AS CUSTOMER_ZIP,
-        NULL AS CUSTOMER_COUNTRY,
-        SUBSCRIBEREMAIL AS CUSTOMER_EMAIL,
-        'SALESFORCE' AS SOURCE_SYSTEM,
-        'SUBSCRIBER' AS CUSTOMER_TYPE
-    FROM {{ source("salesforce_landing", "MARKETINGEMAILS") }}
-    WHERE SUBSCRIBEREMAIL IS NOT NULL
-),
-
-merged AS (
-    -- Keep all real customers
-    SELECT * FROM eco_customers
-
-    UNION ALL
-
-    -- Add subscribers only if email not already in customers
-    SELECT s.*
-    FROM sf_subscribers s
-    WHERE NOT EXISTS (
-        SELECT 1
-        FROM eco_customers c
-        WHERE TRIM(LOWER(c.CUSTOMER_EMAIL)) = TRIM(LOWER(s.CUSTOMER_EMAIL))
     )
+}}
+
+WITH customers AS (
+    SELECT * FROM {{ source('ecoessentials_landing', 'customer') }}
+),
+
+marketing_emails AS (
+    SELECT DISTINCT
+        NULLIF(customerid, 'NULL') AS CUSTOMER_ID,
+        subscriberfirstname,
+        subscriberid,
+        subscriberlastname,
+        subscriberemail
+    FROM {{ source('DT_salesforce_emails', 'marketingemails') }}
 )
 
 SELECT
     {{ dbt_utils.generate_surrogate_key([
-        "CASE 
-            WHEN CUSTOMER_EMAIL IS NOT NULL AND TRIM(CUSTOMER_EMAIL) != '' 
-                THEN TRIM(LOWER(CUSTOMER_EMAIL))
-            ELSE CONCAT(SOURCE_SYSTEM, '_', CUSTOMER_ID)
-         END"
+        'COALESCE(c.customer_email, m.subscriberemail)',
+        'COALESCE(c.customer_first_name, m.subscriberfirstname)',
+        'COALESCE(c.customer_last_name, m.subscriberlastname)'
     ]) }} AS CUSTOMER_KEY,
-
-    CUSTOMER_ID,
-    CUSTOMER_FIRST_NAME,
-    CUSTOMER_LAST_NAME,
-    CUSTOMER_PHONE,
-    CUSTOMER_ADDRESS,
-    CUSTOMER_CITY,
-    CUSTOMER_STATE,
-    CUSTOMER_ZIP,
-    CUSTOMER_COUNTRY,
-    CUSTOMER_EMAIL,
-    CUSTOMER_TYPE
-
-FROM merged
+    COALESCE(c.customer_id, TRY_CAST(m.customerid AS NUMBER)) AS CUSTOMER_ID,
+    COALESCE(c.customer_first_name, m.subscriberfirstname) AS CUSTOMER_FIRST_NAME
+    COALESCE(c.customer_last_name, m.subscriberlastname) AS CUSTOMER_LAST_NAME,
+    COALESCE(c.customer_email, m.subscriberemail) AS CUSTOMER_EMAIL,
+    c.CUSTOMER_ADDRESS,
+    c.CUSTOMER_CITY,
+    c.CUSTOMER_STATE,
+    c.CUSTOMER_ZIP,
+    c.CUSTOMER_COUNTRY,
+    CASE
+        WHEN m.subscriberid IS NOT NULL THEN TRUE
+        ELSE FALSE
+    END AS IS_SUBSCRIBER
+FROM customers c
+FULL OUTER JOIN marketing_emails m
+    ON c.customer_id = m.customerid
