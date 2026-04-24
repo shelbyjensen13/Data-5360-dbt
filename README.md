@@ -67,12 +67,11 @@ The dashboard uses a **live connection to Snowflake**, ensuring real-time access
 ---
 
 ## 🔑 Key Insights
-*(Update these based on your actual dashboard findings)*
 
-- Marketing campaigns vary significantly in their conversion effectiveness  
-- A small number of campaigns drive a large portion of total sales  
-- Sales trends show patterns over time that can inform future business strategy  
-- Customer engagement through email marketing has a measurable impact on revenue  
+- Total revenue from marketing campaigns is ~ $14,500  
+- The subscriber newsletter is the second most effective campaign
+- Sales trends show Kitchen Essentials Bundle campaign is most effective among non-subscribers  
+- The Recycled Materials Collection campaign has the highest conversion rate among subscribers
 
 ---
 
@@ -102,9 +101,3 @@ The dashboard uses a **live connection to Snowflake**, ensuring real-time access
 - Transformed raw data into actionable insights for decision makers  
 - Built a live-connected dashboard to analyze sales and marketing performance  
 
----
-
-## 🔗 Additional Resources
-- Snowflake Documentation  
-- dbt Documentation  
-- Tableau / Visualization Tool Documentation  
