@@ -58,10 +58,9 @@ This structure follows a **star schema design**, allowing for efficient querying
 ## 📈 Dashboard Overview
 The final dashboard was designed for Eco Essentials leadership and includes:
 
-- Sales trends over time  
-- Revenue by product and category  
-- Marketing campaign performance  
-- Conversion rates from marketing emails to purchases  
+- Performance ranking per marketing campaign
+- Most efficient campaign on conversion rate  
+- New customer vs loyalty subscribers 
 
 The dashboard uses a **live connection to Snowflake**, ensuring real-time access to updated data.
 
